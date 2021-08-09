@@ -1,0 +1,21 @@
+.info__about {
+    color: #FFF;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin: 0;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 767px) {
+  .info__about {
+    padding: 0;
+  }
+}

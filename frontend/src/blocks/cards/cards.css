@@ -1,0 +1,11 @@
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(282px, 1fr));
+    grid-gap: 17px;
+    max-width: 880px;
+    margin: 0 auto;
+    margin-top: 47.25px;
+    padding: 0;
+    text-decoration: none;
+    padding-inline-start: 0;
+  }

@@ -1,0 +1,10 @@
+.card__info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 25px;
+    margin-bottom: 31px;
+    margin-left: 21px;
+    margin-right: 30px;
+    align-items: center;
+}

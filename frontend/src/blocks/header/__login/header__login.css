@@ -1,0 +1,12 @@
+.header__login {
+    display: flex;
+    justify-content: space-between;
+    vertical-align: baseline;
+    margin: 0 auto;
+  }
+
+  @media screen and (max-width: 767px) {
+    .header__login {
+        margin-right: 30px;
+    }
+  }

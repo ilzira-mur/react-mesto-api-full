@@ -1,0 +1,36 @@
+.header__status {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    color: #FFFFFF;
+    padding-right: 24px;
+    text-align: center;
+  }
+  
+  .header__status:last-of-type {
+    padding-right: 0;
+  }
+
+  @media screen and (max-width: 767px) {
+    .header__status {
+      font-size: 14px;
+      line-height: 17px;
+    }
+  }
+  
+
+
+  .header__button {
+    display: none;
+  }
+
+  @media screen and (max-width: 425px) {
+    .header__button  {
+      display: flex;
+      margin: 20px auto;
+      width: 30px;
+      height: 30px;
+    }
+  }

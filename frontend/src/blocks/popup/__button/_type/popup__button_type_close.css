@@ -1,0 +1,31 @@
+.popup__button_type_close {
+    display: flex;
+    margin: 0;
+    min-width: 50px;
+    min-height: 50px;
+    position: absolute;
+    right: -45px;
+    top: -50px;
+    background-color: transparent;
+    font: inherit;
+    color: inherit;
+    background-image: url(../../../../images/close_icon.svg);
+    object-fit: contain;
+    background-size: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  .popup__button_type_close {
+    min-width: 26px;
+    min-height: 26px;
+    right: -5px;
+    top: -30px;
+    background-size: 100%;
+  }
+}
+
+.popup__button_type_close:hover {
+    opacity: 0.6;
+    transform: rotate(45deg);
+    transition: 0.1s linear;
+}

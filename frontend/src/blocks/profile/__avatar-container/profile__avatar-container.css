@@ -1,0 +1,17 @@
+.profile__avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    border: 0;
+    border-radius: 50%;
+    box-sizing: border-box;
+    background: #000;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 26px;
+  }
+  
+  .profile__avatar-container:focus {
+    outline: none;
+  }

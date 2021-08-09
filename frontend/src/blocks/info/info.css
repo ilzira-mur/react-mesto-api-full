@@ -1,0 +1,21 @@
+.info {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    grid-row-gap: 15px;
+    grid-column-gap: 17px;
+    align-self: center;
+  }
+  
+  @media screen and (max-width: 767px) {
+    .info {
+      grid-template-columns: minmax(189px, 189px) minmax(18px, 18px);
+      grid-row-gap: 12px;
+      grid-column-gap: 10px;
+      text-align: center;
+      margin-top: 22.25px;
+      margin-bottom: 36px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
