@@ -161,6 +161,7 @@ function handleAddPlaceSubmit(card) {
     api.setUserInfo(userInfo)
     .then((newUser) => {
         setCurrentUser(newUser);
+        console.log(newUser)
         closeAllPopups();
     })
     .catch(err => console.log(`${err}`))

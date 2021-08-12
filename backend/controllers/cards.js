@@ -8,7 +8,6 @@ const getCards = (req, res) => {
   Card.find({})
     .then((cards) => {
       res.status(200).send(cards);
-      console.log(cards);
     })
     .catch((err) => {
       throw new InternalServerError(`Ошибка - ${err.message}`);
