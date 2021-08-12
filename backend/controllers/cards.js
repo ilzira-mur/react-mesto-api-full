@@ -6,8 +6,10 @@ const Forbidden = require('../errors/Forbidden');
 
 const getCards = (req, res) => {
   Card.find({})
-    .populate('user')
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => {
+      res.status(200).send(cards);
+      console.log(cards);
+    })
     .catch((err) => {
       throw new InternalServerError(`Ошибка - ${err.message}`);
     });
@@ -17,7 +19,7 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new FaultRequest('Переданы некорректные данные при создании карточки.');
@@ -38,7 +40,7 @@ const deleteCard = (req, res, next) => {
         Card.findByIdAndRemove(req.params.id)
         // eslint-disable-next-line no-shadow
           .then((card) => {
-            res.status(200).send({ data: card });
+            res.status(200).send(card);
           })
           .catch((err) => {
             if (err.name === 'CastError') {
@@ -68,7 +70,7 @@ const likeCard = (req, res, next) => {
         { new: true },
       )
         // eslint-disable-next-line no-shadow
-        .then((card) => res.status(200).send({ data: card }))
+        .then((card) => res.status(200).send(card))
         .catch((err) => {
           if (err.name === 'CastError') {
             throw new FaultRequest('Переданы некорректные данные для постановки/снятии лайка.');
@@ -92,7 +94,7 @@ const dislikeCard = (req, res, next) => {
         { new: true },
       )
         // eslint-disable-next-line no-shadow
-        .then((card) => res.status(200).send({ data: card }))
+        .then((card) => res.status(200).send(card))
         .catch((err) => {
           if (err.name === 'CastError') {
             throw new FaultRequest('Переданы некорректные данные для постановки/снятии лайка.');

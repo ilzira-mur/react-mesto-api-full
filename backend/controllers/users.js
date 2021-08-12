@@ -10,7 +10,7 @@ const { NODE_ENV, JWT_SECRET } = require('../configs/index');
 
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(200).send({ data: users }))
+    .then((users) => res.status(200).send({ users }))
     .catch((err) => {
       throw new InternalServerError(`Ошибка - ${err.message}`);
     });
@@ -22,7 +22,7 @@ const getUserId = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
       } else {
-        res.status(200).send({ data: user });
+        return res.status(200).send(user);
       }
     })
     .catch((err) => {
@@ -42,21 +42,19 @@ const createUser = (req, res, next) => {
   if (!email || !password) {
     throw new FaultRequest('Email или пароль отсутсвует');
   }
-  User.findOne({
-    email,
-  })
-  // eslint-disable-next-line consistent-return
+  User.findOne({ email })
     .then((user) => {
       if (user) {
         next(new ConflicRequest('Пользователь с таким email есть в системе'));
       }
-
-      bcrypt.hash(password, 10)
+      return bcrypt.hash(password, 10)
         .then((hash) => User.create({
           name, about, avatar, email, password: hash,
         }))
-        // eslint-disable-next-line no-shadow
-        .then(({ _id, email }) => res.status(200).send({ _id, email }))
+        .then((user) => res.status(200).send({
+          email: user.email,
+          _id: user._id,
+        }))
         .catch((err) => {
           throw new InternalServerError(`Ошибка - ${err.message}`);
         })
@@ -76,7 +74,7 @@ const updateUserInfo = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
       } else {
-        res.status(200).send({ data: user });
+        return res.status(200).send(user);
       }
     })
     .catch((err) => {
@@ -98,7 +96,7 @@ const updateUserAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
       } else {
-        res.status(200).send({ data: user });
+        res.status(200).send(user);
       }
     })
     .catch((err) => {
@@ -153,7 +151,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
       } else {
-        res.status(200).send({ data: user });
+        res.status(200).send({ user });
       }
     })
     .catch((err) => {

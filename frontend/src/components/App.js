@@ -32,13 +32,16 @@ function App() {
   const history = useHistory();
 
 
+
 useEffect(()=>{
+  if (loggedIn) {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
     .then(([userInfo, cards]) => {
         setCards(cards);
         setCurrentUser(userInfo)
       }).catch(err => console.log(`${err}`))
-  }, [])
+    }
+  }, [loggedIn])
 
 
 useEffect(() => {
@@ -48,8 +51,10 @@ useEffect(() => {
 
 
   const tokenCheck = () => {
-    const jwt = localStorage.getItem("jwt");
-      auth.getContent(jwt).then((res) => {
+    const token = localStorage.getItem('token');
+    if (token){
+      auth.getContent(token)
+      .then((res) => {
         if (res) {
           setUserData({
             email: res.data.email
@@ -69,6 +74,7 @@ useEffect(() => {
           console.log(`${err}`)
         }
       })
+    }
   }
 
   
@@ -97,7 +103,8 @@ useEffect(() => {
   const handleLogin = (email, password) => {
     auth.authorize(email, password)
       .then(data => {
-        if (data) {
+        if (data.token) {
+          localStorage.setItem('token', data.token)
           setUserData({
             email: email,
             password: password
@@ -120,7 +127,7 @@ useEffect(() => {
 
 
   const onSignOut = () => {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
     setLoggedIn(false);
     history.push('/signin');
   }
