@@ -68,15 +68,10 @@ const createUser = (req, res, next) => {
 const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   const { id } = req.user._id;
-  console.log(req.body)
-  console.log(req.user._id)
-  User.findByIdAndUpdate(id, { name, about }, { new: true })
+  
+  User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден.');
-      } else {
         res.status(200).send(user);
-      }
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -91,14 +86,11 @@ const updateUserInfo = (req, res, next) => {
 const updateUserAvatar = (req, res, next) => {
   const { id } = req.user._id;
   const { avatar } = req.body;
-
+  console.log(req.body)
+  console.log(req.user._id)
   User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден.');
-      } else {
         res.status(200).send(user);
-      }
     })
     .catch((err) => {
       if (err.kind === 'ObjectId' || err.name === 'ValidationError' || err.name === 'CastError') {

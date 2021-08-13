@@ -4,7 +4,7 @@ const { NODE_ENV, JWT_SECRET } = require('../configs/index');
 const Unauthorized = require('../errors/Unauthorized');
 
 // eslint-disable-next-line consistent-return
-module.exports = (req, res, next) => {
+const auth = (req, res, next) => {
   const { authorization } = req.headers;
   try {
     if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -23,3 +23,5 @@ module.exports = (req, res, next) => {
   }
   next();
 };
+
+module.exports = auth;

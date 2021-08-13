@@ -30,45 +30,27 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findById(req.params.id)
-    .orFail(() => {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
-    })
+  const owner = req.user._id;
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (card.owner._id.toString() === req.user.id) {
-        Card.findByIdAndRemove(req.params.id)
-        // eslint-disable-next-line no-shadow
-          .then((card) => {
-            res.status(200).send(card);
-          })
-          .catch((err) => {
-            if (err.name === 'CastError') {
-              throw new NotFoundError('Карточка с указанным _id не найдена.');
-            }
-            throw new InternalServerError(`Ошибка - ${err.message}`);
-          })
-          .catch(next);
-      } else {
+      if (!card) {
+        throw new NotFoundError('Карточка с указанным _id не найдена.');
+      } else if (card.owner.toString() !== owner) {
         throw new Forbidden('Недостаточно прав');
       }
-      return res.status(200).send({ message: 'Карточка удалена' });
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((removedCard) => res.status(200).send(removedCard));
     })
-    .catch(next);
+    .catch((err) => next(err));
 };
 
+
 const likeCard = (req, res, next) => {
-  Card.findById(req.params.id)
-    .orFail(() => {
-      throw new NotFoundError('Переданы некорректные данные для постановки/снятии лайка.');
-    })
-    // eslint-disable-next-line no-unused-vars
-    .then((card) => {
       Card.findByIdAndUpdate(
         req.params.id,
-        { $addToSet: { likes: req.user } },
+        { $addToSet: { likes: req.user._id } },
         { new: true },
       )
-        // eslint-disable-next-line no-shadow
         .then((card) => res.status(200).send(card))
         .catch((err) => {
           if (err.name === 'CastError') {
@@ -76,8 +58,6 @@ const likeCard = (req, res, next) => {
           }
         })
         .catch(next);
-    })
-    .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {

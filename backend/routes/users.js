@@ -19,7 +19,7 @@ userRouter.get('/users/:userId', auth, celebrate({
 userRouter.patch('/users/me', auth, celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    about: Joi.string().min(2).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
 }), updateUserInfo);
 
