@@ -15,7 +15,10 @@ const { PORT = 3001 } = process.env;
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const ALLOWED_CORS = [
-  'http://localhost:3000'
+  'http://oops.nomoredomains.club',
+  'https://oops.nomoredomains.club',
+  'http://localhost:3000',
+  'https://localhost:3000',
 ];
 
 app.use((req, res, next) => {
