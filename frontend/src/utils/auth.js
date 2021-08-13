@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3001';
+export const BASE_URL = 'oops.nomoredomains.club';
 
 const getResponse = (res) => {
   if (res.ok) {

@@ -94,7 +94,7 @@ class Api {
 }
 
 const api = new Api({
-  url: 'http://localhost:3001',
+  url: 'oops.nomoredomains.club',
   headers: {
     //authorization: `8865dd26-fca5-4131-9c42-5dfb67b3f292`,
     "Content-Type": "application/json",
