@@ -30,27 +30,46 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  const owner = req.user._id;
   Card.findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError('Карточка с указанным _id не найдена.');
+    })
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена.');
-      } else if (card.owner.toString() !== owner) {
+      if (card.owner.toString() === req.user._id) {
+        Card.findByIdAndRemove(req.params.cardId)
+        // eslint-disable-next-line no-shadow
+          .then((card) => {
+            res.status(200).send(card);
+          })
+          .catch((err) => {
+            if (err.name === 'CastError') {
+              throw new NotFoundError('Карточка с указанным _id не найдена.');
+            }
+            throw new InternalServerError(`Ошибка - ${err.message}`);
+          })
+          .catch(next);
+      } else {
         throw new Forbidden('Недостаточно прав');
       }
-      Card.findByIdAndRemove(req.params.cardId)
-        .then((removedCard) => res.status(200).send(removedCard));
+      return res.status(200).send({ message: 'Карточка удалена' });
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 
 const likeCard = (req, res, next) => {
+  Card.findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError('Переданы некорректные данные для постановки/снятии лайка.');
+    })
+    // eslint-disable-next-line no-unused-vars
+    .then((card) => {
       Card.findByIdAndUpdate(
-        req.params.id,
-        { $addToSet: { likes: req.user._id } },
+        req.params.cardId,
+        { $addToSet: { likes: req.user } },
         { new: true },
       )
+        // eslint-disable-next-line no-shadow
         .then((card) => res.status(200).send(card))
         .catch((err) => {
           if (err.name === 'CastError') {
@@ -58,17 +77,20 @@ const likeCard = (req, res, next) => {
           }
         })
         .catch(next);
+    })
+    .catch(next);
 };
 
+
 const dislikeCard = (req, res, next) => {
-  Card.findById(req.params.id)
+  Card.findById(req.params.cardId)
     .orFail(() => {
       throw new NotFoundError('Переданы некорректные данные для постановки/снятии лайка.');
     })
     // eslint-disable-next-line no-unused-vars
     .then((card) => {
       Card.findByIdAndUpdate(
-        req.params.id,
+        req.params.cardId,
         { $pull: { likes: req.user._id } },
         { new: true },
       )

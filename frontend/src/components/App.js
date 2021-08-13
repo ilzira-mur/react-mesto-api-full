@@ -137,7 +137,7 @@ function handleCardLike(card) {
     const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked)
         .then((newCard) => {
-            setCards((state) => state.map((c) => c._id === card._id ? newCard.card : c));
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     }).catch(err => console.log(`${err}`))
 }
 
