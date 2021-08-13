@@ -158,21 +158,15 @@ function handleAddPlaceSubmit(card) {
 }
 
   const handleUpdateUser = (userInfo) => {
-
-    
-    console.log(userInfo)
     api.setUserInfo(userInfo)
     .then((newUser) => {
-      console.log(newUser)
         setCurrentUser(newUser);
-        
         closeAllPopups();
     })
     .catch(err => console.log(`${err}`))
   }
 
   const handleUpdateAvatar = (userInfo) => {
-    console.log(userInfo)
     api.changeUserAvatar(userInfo)
     .then((avatar) => {
       setCurrentUser(avatar);
