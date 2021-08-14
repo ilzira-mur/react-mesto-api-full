@@ -57,7 +57,7 @@ useEffect(() => {
       .then((res) => {
         if (res) {
           setUserData({
-            email: res.data.email
+            email: res.email
           });
           setLoggedIn(true);
           history.push('/');
@@ -76,7 +76,6 @@ useEffect(() => {
       })
     }
   }
-
   
   const handleRegister = (email, password) => {
     auth.register(email, password)
@@ -104,12 +103,12 @@ useEffect(() => {
     auth.authorize(email, password)
       .then(data => {
         if (data.token) {
-          localStorage.setItem('token', data.token)
           setUserData({
             email: email,
             password: password
           });
           setLoggedIn(true);
+          localStorage.setItem('token', data.token)
           history.push('/');
         }
       })
@@ -118,7 +117,7 @@ useEffect(() => {
           console.log(`401 - пользователь с email не найден`);
         }
         if (err === 400) {
-          console.log(`400 - не передано одно из полей `);
+          console.log(`400 - некорректно заполнено одно из полей`);
         }
         setInfoTooltipPopupOpen(true);
         setAuthSuccess(false)

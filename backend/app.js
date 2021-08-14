@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
@@ -38,7 +39,7 @@ app.use((req, res, next) => {
     return res.status(200).send();
   }
 
-  next();
+  return next();
 });
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -64,8 +65,11 @@ app.use(cardRouter);
 
 app.use(requestLogger);
 app.use(errorLogger);
+app.use(errors());
 
-app.get('*', (req) => { throw new NotFoundError(`По адресу ${req.path} ничего не найдено`); });
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Ресурс не найден'));
+});
 
 app.use(errorHandler);
 

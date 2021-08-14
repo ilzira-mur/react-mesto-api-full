@@ -4,7 +4,6 @@ const NotFoundError = require('../errors/NotFoundError');
 const FaultRequest = require('../errors/FaultRequest');
 const InternalServerError = require('../errors/InternalServerError');
 const ConflicRequest = require('../errors/ConflicRequest');
-const Unauthorized = require('../errors/Unauthorized');
 const User = require('../models/user');
 const { NODE_ENV, JWT_SECRET } = require('../configs/index');
 
@@ -17,7 +16,7 @@ const getUsers = (req, res) => {
 };
 
 const getUserId = (req, res, next) => {
-  User.findById(req.params.id)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
@@ -51,6 +50,7 @@ const createUser = (req, res, next) => {
         .then((hash) => User.create({
           name, about, avatar, email, password: hash,
         }))
+        // eslint-disable-next-line no-shadow
         .then((user) => res.status(200).send({
           email: user.email,
           _id: user._id,
@@ -70,7 +70,7 @@ const updateUserInfo = (req, res, next) => {
   const id = req.user._id;
   User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
-        res.status(200).send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -87,7 +87,7 @@ const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
-        res.status(200).send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.kind === 'ObjectId' || err.name === 'ValidationError' || err.name === 'CastError') {
@@ -101,37 +101,16 @@ const updateUserAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    throw new FaultRequest('Email или пароль отсутсвует');
-  }
-  User.findOne({
-    email,
-  })
-  // eslint-disable-next-line consistent-return
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        next(new Unauthorized('Пользователя не существует'));
-      }
-      bcrypt.compare(password, user.password)
-      // eslint-disable-next-line consistent-return
-        .then((matched) => {
-          if (!matched) {
-            throw new Unauthorized('Некоректный пароль');
-          }
-          // eslint-disable-next-line consistent-return
-          const token = jwt.sign(
-            { _id: user._id },
-            NODE_ENV === 'production' ? JWT_SECRET : 'PrivateKey',
-            { expiresIn: '7d' },
-          );
-          res.send({ token });
-          })  
-        .catch((err) => {
-          throw new InternalServerError(`Ошибка - ${err.message}`);
-        });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'PrivateKey', { expiresIn: '7d' });
+      res.status(200).send({ token });
     })
     .catch((err) => {
-      throw new InternalServerError(`Ошибка - ${err.message}`);
+      if (err.name === 'Validation') {
+        throw new FaultRequest('Переданы некорректные данные');
+      }
+      next(err);
     });
 };
 

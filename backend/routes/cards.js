@@ -22,13 +22,13 @@ cardRouter.delete('/cards/:cardId', auth, celebrate({
   }),
 }), deleteCard);
 
-cardRouter.put('/cards/likes/:cardId', auth, celebrate({
+cardRouter.put('/cards/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().length(24),
   }),
 }), likeCard);
 
-cardRouter.delete('/cards/likes/:cardId', auth, celebrate({
+cardRouter.delete('/cards/:cardId/likes', auth, celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().length(24),
   }),

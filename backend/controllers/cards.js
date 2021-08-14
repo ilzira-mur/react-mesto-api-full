@@ -56,7 +56,6 @@ const deleteCard = (req, res, next) => {
     .catch(next);
 };
 
-
 const likeCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
@@ -80,7 +79,6 @@ const likeCard = (req, res, next) => {
     })
     .catch(next);
 };
-
 
 const dislikeCard = (req, res, next) => {
   Card.findById(req.params.cardId)

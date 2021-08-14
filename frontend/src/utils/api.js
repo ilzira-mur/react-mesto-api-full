@@ -71,21 +71,21 @@ class Api {
   }
 
   setLike(id) {
-    return fetch(`${this._url}/cards/likes/${id}`, {
+    return fetch(`${this._url}/cards/${id}/likes`, {
       method: "PUT",
       headers: this.getHeader(),
     }).then(this._getResponseData);
   }
 
   deleteLike(id) {
-    return fetch(`${this._url}/cards/likes/${id}`, {
+    return fetch(`${this._url}/cards/${id}/likes`, {
       method: "DELETE",
       headers: this.getHeader(),
     }).then(this._getResponseData);
   }
 
   changeLikeCardStatus(id, isLiked) {
-    return fetch(`${this._url}/cards/likes/${id}`, {
+    return fetch(`${this._url}/cards/${id}/likes`, {
       method: `${isLiked ? "PUT" : "DELETE"}`,
       headers: this.getHeader(),
     }).then(this._getResponseData);
@@ -94,7 +94,7 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://api.oops.nomoredomains.club",
+  url: '//localhost:3001',
   headers: {
     //authorization: `8865dd26-fca5-4131-9c42-5dfb67b3f292`,
     "Content-Type": "application/json",
