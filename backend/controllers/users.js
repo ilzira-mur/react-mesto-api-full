@@ -27,11 +27,9 @@ const getUserId = (req, res, next) => {
     .catch((err) => {
       if (err.kind === 'ObjectId') {
         throw new FaultRequest('Переданы некорректные данные при создании пользователя.');
-      } else {
-        throw new InternalServerError(`Ошибка - ${err.message}`);
       }
-    })
-    .catch(next);
+      next(err);
+    });
 };
 
 const createUser = (req, res, next) => {
